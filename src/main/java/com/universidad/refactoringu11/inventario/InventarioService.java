@@ -42,9 +42,9 @@ public class InventarioService {
         producto.setStock(nuevoStock);
 
         // Calculo de cantidad de reorden (otra responsabilidad distinta)
+       // Calculo de cantidad de reorden
         boolean necesitaReorden = nuevoStock < producto.getStockMinimo();
-        int cantidadReorden = necesitaReorden
-                ? (producto.getStockMinimo() * 3) - nuevoStock : 0;
+        int cantidadReorden = calcularCantidadReorden(producto, nuevoStock);
 
         // Registro del movimiento (responsabilidad de auditoria)
         String registro = tipoMovimiento + " de " + cantidad + " unidades de "
@@ -60,4 +60,13 @@ public class InventarioService {
         }
         return "OK_" + nuevoStock;
     }
+
+    private int calcularCantidadReorden(Producto producto, int nuevoStock) {
+        if (nuevoStock < producto.getStockMinimo()) {
+        return (producto.getStockMinimo() * 3) - nuevoStock;
+        }
+        return 0;
+    }
+
+    
 }
