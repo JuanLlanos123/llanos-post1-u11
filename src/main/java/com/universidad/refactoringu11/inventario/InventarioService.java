@@ -1,7 +1,11 @@
 
 package com.universidad.refactoringu11.inventario;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.universidad.refactoringu11.reportes.ReporteBajoStockService;
+import org.springframework.context.annotation.Lazy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +14,13 @@ public class InventarioService {
 
     private final List<Producto> productos = new ArrayList<>();
     private final List<String> movimientos = new ArrayList<>();
+    private ReporteBajoStockService reporteBajoStockService; // colaborador opcional, sin final
+
+    @Autowired(required = false)
+    @Lazy
+    public void setReporteBajoStockService(ReporteBajoStockService reporteBajoStockService) {
+        this.reporteBajoStockService = reporteBajoStockService;
+    }
 
     public void agregarProducto(Producto producto) {
         productos.add(producto);
@@ -112,6 +123,9 @@ public class InventarioService {
             boolean necesitaReorden, int cantidadReorden) {
 
         if (necesitaReorden) {
+             if (reporteBajoStockService != null) {
+            System.out.println(reporteBajoStockService.generarReporte());
+            }
             System.out.println("ALERTA: " + producto.getNombre()
                     + " bajo stock minimo. Reordenar "
                     + cantidadReorden + " unidades.");
@@ -121,4 +135,7 @@ public class InventarioService {
 
         return "OK_" + nuevoStock;
     }
+
+   
+   
 }
